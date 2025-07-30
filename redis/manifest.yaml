@@ -5,17 +5,82 @@ metadata:
   name: redis-headless
   namespace: roboshop
   labels:
-    component: mongodb
+    component: redis
     project: roboshop
     tier: database
 spec:
   clusterIP: None
   selector:
-    labels:
-    component: mongodb
+    component: redis
     project: roboshop
     tier: database
   ports:
   - protocol: TCP
     port: 6379
     targetPort: 6379
+
+---
+### redis service
+apiVersion: v1
+kind: Service
+metadata: 
+  name: redis
+  namespace: roboshop
+  labels:
+    component: redis
+    project: roboshop
+    tier: database
+spec:
+  selector:
+      component: redis
+      project: roboshop
+      tier: database
+  ports:
+  - protocol: TCP
+    port: 6379
+    targetPort: 6379
+
+---
+### StatefulSet
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: redis
+  namespace: roboshop
+  labels:
+      component: redis
+      project: roboshop
+      tier: database
+spec:
+  selector:
+    matchLabels:
+      component: redis
+      project: roboshop
+      tier: database
+  serviceName: redis-headless
+  replicas: 2
+  ### This is pod definition
+  template:
+    metadata:
+      labels:
+        component: redis
+        project: roboshop
+        tier: database
+    spec:
+      containers:
+      - name: redis
+        image: redis:7
+      volumeMounts:
+      - name: redis-data
+        mountPath: /data
+  ### This PVC definition
+  volumeClaimTemplates:
+  - metadata:
+      name: redis-data
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      storageClassName: ebs-roboshop
+      resources:
+        requests:
+          storage: 2Gi
