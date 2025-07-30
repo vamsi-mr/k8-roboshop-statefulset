@@ -90,12 +90,12 @@ spec:
           mountPath: /var/lib/mysql
   ### This is pVC definition
   volumeClaimTemplates:
-    - metadata:
-      name: mysql-data 
-  spec:
-    accessModes:
-    - ReadWriteOnce
-    storageClassName: ebs-roboshop
-    resources:
-      requests:
-        storage: 2Gi
+  - metadata:
+    name: mysql-data 
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      storageClassName: ebs-roboshop
+      resources:
+        requests:
+          storage: 2Gi
