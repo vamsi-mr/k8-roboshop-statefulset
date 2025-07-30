@@ -81,13 +81,13 @@ spec:
         component: mysql
         project: roboshop
         tier: database
-  spec:
-    containers:
-    - name: mysql 
-      image: mohanvamsi011/mysql:v1
-      volumeMounts:
-      - name: mysql-data
-        mountPath: /var/lib/mysql
+    spec:
+      containers:
+      - name: mysql 
+        image: mohanvamsi011/mysql:v1
+        volumeMounts:
+        - name: mysql-data
+          mountPath: /var/lib/mysql
   ### This is pVC definition
   volumeClaimTemplates:
   - metadata:
