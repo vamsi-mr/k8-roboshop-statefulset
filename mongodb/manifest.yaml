@@ -57,7 +57,7 @@ spec:
       project: roboshop
       tier: database
   serviceName: mongodb-headless
-  replica: 2
+  replicas: 2
   ### This is Pod definition
   template:
     metadata:
