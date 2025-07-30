@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: StorageClass
+metadata:
+  name: ebs-roboshop
+provisioner: ecs.csi.aws.com
+reclaimPolicy: Retain
+volumeBindingMode: WaitForFirstConsumer 

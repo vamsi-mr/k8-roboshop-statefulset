@@ -1,0 +1,85 @@
+### headless service
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongodb-headless
+  namespace: roboshop
+  labels:
+    component: mongodb
+    project: roboshop
+    tier: database
+spec:
+  clusterIP: None
+  selector:
+    component: mongodb
+    project: roboshop
+    tier: database
+  ports:
+  - protocol: TCP
+    port: 27017 # service port
+    targetPort: 27017 # container port
+
+---
+### mongodb service
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongodb
+  namespace: roboshop
+  labels:
+    component: mongodb
+    project: roboshop
+    tier: database
+spec:
+  selector:
+      component: mongodb
+      project: roboshop
+      tier: database
+  ports:
+  - protocol: TCP
+    port: 27017 # service port
+    targetPort: 27017 # container port
+
+---
+apiVersion: apps:v1
+kind: StatefulSet
+metadata:
+  name: mongodb
+  namespace: roboshop
+  labels:
+      component: mongodb
+      project: roboshop
+      tier: database
+spec:
+  selector:
+    matchLabels:
+      component: mongodb
+      project: roboshop
+      tier: database
+  serviceName: mongodb-headless
+  replica: 2
+  ### This is Pod definition
+  template:
+    metadata:
+      labels:
+        component: mongodb
+        project: roboshop
+        tier: database
+    spec:
+      containers:
+      - name: mongodb
+        image: mohanvamsi011/mongodb:v1
+        volumeMounts:
+        - name: mongodb-data
+          mountPath: /data/db
+  ## This is PVC, creating directly here
+  volumeClaimTemplates:
+  - metadata:
+      name: mongodb-data
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      storageClassName: ebs-roboshop
+      resources:
+        requests:
+          storage: 2Gi
