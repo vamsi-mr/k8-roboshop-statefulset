@@ -70,9 +70,9 @@ spec:
       containers:
       - name: redis
         image: redis:7
-      volumeMounts:
-      - name: redis-data
-        mountPath: /data
+        volumeMounts:
+        - name: redis-data
+          mountPath: /data
   ### This PVC definition
   volumeClaimTemplates:
   - metadata:
