@@ -1,0 +1,100 @@
+### ConfigMap
+apiVersion: v1
+kind: ConfigMap
+metadata: 
+  name: payment
+  namespace: roboshop
+  labels:
+    component: payment
+    project: roboshop
+    tier: app
+data:
+  CART_HOST: "cart"
+  CART_PORT: "8080"
+  USER_HOST: "user"
+  USER_PORT: "8080"
+  AMQP_HOST: "rabbitmq"
+
+---
+### Deployment
+apiVersion: apps/v1 
+kind: Deployment
+metadata:
+  name: payment
+  namespace: roboshop
+  labels:
+    component: payment
+    project: roboshop
+    tier: app
+spec:
+  selector:
+    matchLabels:
+      component: payment
+      project: roboshop
+      tier: app
+  replicas: 2
+  ### This is Pod definiton
+  template:
+    metadata:
+      name: payment
+      labels:
+        component: payment
+        project: roboshop
+        tier: app
+    spec:
+      containers:
+      - name: payment
+        image: mohanvamsi011/payment:v1
+        envFrom:
+        - configMapRef:
+            name: payment
+        resources:
+          requests:
+            cpu: 50m
+            memory: 128Mi
+          limits:
+            cpu: 100m
+            memory: 256Mi
+
+---
+### payment Service
+apiVersion: v1
+kind: Service
+metadata: 
+  name: payment
+  namespace: roboshop
+  labels:
+    component: payment
+    project: roboshop
+    tier: app
+spec:
+  selector:
+    component: payment
+    project: roboshop
+    tier: app
+  ports:
+  - protocol: TCP
+    port: 8080
+    targetPort: 8080
+      
+---
+### Autoscaling
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: payment
+  namespace: roboshop
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: payment
+  minReplicas: 1
+  maxReplicas: 10
+  metrics:
+  - type: Resource
+    resource: 
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 10
