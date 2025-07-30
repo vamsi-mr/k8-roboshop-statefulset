@@ -91,7 +91,7 @@ spec:
   ### This is pVC definition
   volumeClaimTemplates:
   - metadata:
-    name: mysql-data 
+      name: mysql-data 
     spec:
       accessModes:
       - ReadWriteOnce
