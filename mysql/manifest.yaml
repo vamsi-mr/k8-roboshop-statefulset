@@ -87,10 +87,12 @@ spec:
         image: mohanvamsi011/mysql:v1
         envFrom:
         - secretRef:
-          name: mysql
+            name: mysql
         volumeMounts:
         - name: mysql-data
           mountPath: /var/lib/mysql
+
+---
   ### This is pVC definition
   volumeClaimTemplates:
   - metadata:
