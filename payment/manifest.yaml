@@ -28,8 +28,8 @@ metadata:
     tier: app
 type: Opaque
 data:
-  AMQP_USER: "cm9ib3Nob3A="
-  AMQP_PASS: "cm9ib3Nob3AxMjM="
+  AMQP_USER: cm9ib3Nob3A=
+  AMQP_PASS: cm9ib3Nob3AxMjM=
 
 ---
 ### Deployment
@@ -64,7 +64,6 @@ spec:
         envFrom:
         - configMapRef:
             name: payment
-        envFrom:
         - secretRef:
             name: payment
         resources:
