@@ -90,8 +90,8 @@ spec:
           mountPath: /var/lib/mysql
   ### This is pVC definition
   volumeClaimTemplates:
-  - metadata:
-    name: mysql-data 
+    - metadata:
+      name: mysql-data 
   spec:
     accessModes:
     - ReadWriteOnce
