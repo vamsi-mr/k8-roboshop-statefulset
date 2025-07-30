@@ -77,7 +77,7 @@ spec:
 ---
 ### Autoscaling
 apiVersion: autoscaling/v2
-kind: HorizontalPodAutoScaler
+kind: HorizontalPodAutoscaler
 metadata:
   name: catalogue
   namespace: roboshop
@@ -95,4 +95,3 @@ spec:
         target:
           type: Utilization
           averageUtilization: 10
-
